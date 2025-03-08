@@ -36,6 +36,7 @@ def login_user(request):
 def get_balance(request):
     account = request.user.account
     serializer = AccountSerializer(account)
+    generate_monthly_statements.delay()
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
