@@ -51,3 +51,4 @@ def generate_monthly_statements():
                 'num_transactions': num_transactions
             }
         )
+    print("Task completed")
