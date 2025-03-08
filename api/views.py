@@ -1,3 +1,4 @@
+import math
 from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -120,3 +121,13 @@ def transfer(request):
         return Response({'balance': account.balance}, status=status.HTTP_200_OK)
     
     return Response({'error': 'Insufficient funds'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def fetch_transactions(request):
+    page_size = 10
+    page = request.data.get('page', 1)
+    skip = (page-1)*page_size
+    total_count = Transaction.objects.count()
+    total_pages = math.ceil(total_count/page_size)
+    transactions = list(Transaction.objects.values()[skip:skip+page_size])
+    return Response({"success": True, "total_pages": total_pages, "curr_page": page, "total_count": total_count,"transactions": transactions}, status=status.HTTP_200_OK)
